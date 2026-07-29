@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# Données générées
+docs/avancement/data/
+
+# Conserver le dossier vide
+!docs/avancement/data/.gitkeep
