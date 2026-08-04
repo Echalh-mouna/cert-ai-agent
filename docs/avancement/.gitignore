@@ -3,11 +3,11 @@ __pycache__/
 *.pyc
 
 # Données générées
-docs/avancement/data/
+data/
 
-# Conserver le dossier vide
-!docs/avancement/data/.gitkeep
-docs/avancement/data/raw_cves.json
-docs/avancement/data/parsed_cves.json
-docs/avancement/data/cert_agent.db
-docs/avancement/alerts/
+# Conserver le dossier
+!data/.gitkeep
+
+# Fiches générées
+alerts/*
+!alerts/CVE-2026-36956.md
