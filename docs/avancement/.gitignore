@@ -7,3 +7,7 @@ docs/avancement/data/
 
 # Conserver le dossier vide
 !docs/avancement/data/.gitkeep
+docs/avancement/data/raw_cves.json
+docs/avancement/data/parsed_cves.json
+docs/avancement/data/cert_agent.db
+docs/avancement/alerts/
