@@ -305,134 +305,69 @@ REMEDIATION:
 
 def build_fiche(cve_context: dict, llm_analysis: dict) -> str:
 
-
-
     products_str = "\n".join(
-
         f"| {p['vendor'] or 'N/A'} | {p['product'] or 'N/A'} | {p['version'] or 'N/A'} |"
-
         for p in cve_context["products"]
-
     ) or "| Non spécifié dans NVD | - | - |"
 
-
-
     exploit_status = (
-
         "Oui (confirmé par CISA KEV)"
-
         if cve_context["exploit_public"]
-
         else "Non confirmé à ce jour"
-
     )
-
-
 
     return f"""# Fiche d'alerte — {cve_context['cve_id']}
 
-
-
 ## Tableau de synthèse
 
-
-
 | Élément | Synthèse |
-
 |---|---|
-
 | **Applicabilité** | Voir tableau des produits/versions concernés ci-dessous |
-
 | **Risque** | Score CVSS {cve_context['cvss_score']} ({cve_context['cvss_severity']}) |
-
 | **Exploitabilité** | {exploit_status} |
-
 | **Remédiation** | Voir section détaillée ci-dessous |
-
-
 
 ## 1. Applicabilité
 
-
-
 | Vendor | Produit | Version |
-
 |---|---|---|
-
 {products_str}
-
-
 
 ## 2. Risque
 
-
-
 **Description officielle (NVD) :**
-
-
 
 {cve_context['description']}
 
-
-
 **Analyse détaillée :**
-
-
 
 {llm_analysis['risk_analysis']}
 
-
-
 ## 3. Exploitabilité
-
-
 
 **Exploit public confirmé (CISA KEV) :**
 
-
-
 {exploit_status}
-
-
 
 **Score CVSS :**
 
-
-
 {cve_context['cvss_score']}
-
-
 
 **Vecteur :**
 
-
-
 {cve_context['cvss_vector']}
-
-
 
 ## 4. Remédiation
 
-
-
 {llm_analysis['remediation']}
-
-
 
 ## Références
 
-
-
 {chr(10).join(f"- {url}" for url in cve_context["references"]) or "Aucune référence disponible."}
-
-
 
 ---
 
-
-
 *Fiche générée automatiquement le {datetime.now().strftime('%Y-%m-%d %H:%M')}*
-
 """
 
 
