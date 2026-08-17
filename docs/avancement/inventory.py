@@ -29,7 +29,7 @@ FICTIVE_EQUIPMENT = [
         "product": "sma7210_firmware",
         "version": "12.5.0-02624",
         "responsible_name": "EL hany Marwa",
-        "responsible_email": "echalhmouna12@gmail.com"
+        "responsible_email": "echalhmouna27@gmail.com"
     },
     {
         "company": "Entreprise B",
@@ -37,7 +37,7 @@ FICTIVE_EQUIPMENT = [
         "product": "fortigate_firmware",
         "version": "7.2.5",
         "responsible_name": "EL hany Marwa",
-        "responsible_email": "echalhmouna12@gmail.com"
+        "responsible_email": "echalhmouna27@gmail.com"
     },
     {
         "company": "Entreprise C",
@@ -61,7 +61,7 @@ FICTIVE_EQUIPMENT = [
         "product": "ios_xe",
         "version": "17.9.1",
         "responsible_name": "Nadia Chraibi",
-        "responsible_email": "echalhmouna12@gmail.com"
+        "responsible_email": "echalhmouna27@gmail.com"
     }
 ]
 
