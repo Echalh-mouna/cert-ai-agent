@@ -1,6 +1,8 @@
 # Python
 __pycache__/
 *.pyc
+# Secrets - ne jamais committer
+.env
 
 # Données générées
 data/
@@ -11,3 +13,4 @@ data/
 # Fiches générées
 alerts/*
 !alerts/CVE-2026-36956.md
+!alerts/CVE-2025-15649.pdf
