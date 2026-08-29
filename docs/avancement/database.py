@@ -58,24 +58,12 @@ def init_db(db_path: str = DB_PATH) -> None:
         )
     """)
 
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_products_cve_id ON products(cve_id)"
-    )
-
-    cursor.execute(
-        'CREATE INDEX IF NOT EXISTS idx_references_cve_id '
-        'ON "references"(cve_id)'
-    )
-
-    cursor.execute(
-        "CREATE UNIQUE INDEX IF NOT EXISTS ux_products "
-        "ON products(cve_id, vendor_id, product, version)"
-    )
-
-    cursor.execute(
-        'CREATE UNIQUE INDEX IF NOT EXISTS ux_references '
-        'ON "references"(cve_id, url)'
-    )
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_products_cve_id ON products(cve_id)")
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_references_cve_id ON "references"(cve_id)')
+    cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_products "
+                   "ON products(cve_id, vendor_id, product, version)")
+    cursor.execute('CREATE UNIQUE INDEX IF NOT EXISTS ux_references '
+                   'ON "references"(cve_id, url)')
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS sources (
@@ -118,16 +106,33 @@ def init_db(db_path: str = DB_PATH) -> None:
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS cisa_advisories (
+            reference TEXT PRIMARY KEY,
+            title TEXT,
+            summary TEXT,
+            link TEXT,
+            published_date TEXT
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS cisa_advisory_cve (
+            reference TEXT NOT NULL,
+            cve_id TEXT NOT NULL,
+            PRIMARY KEY (reference, cve_id),
+            FOREIGN KEY (reference) REFERENCES cisa_advisories(reference),
+            FOREIGN KEY (cve_id) REFERENCES cve(cve_id)
+        )
+    """)
+
     conn.commit()
     conn.close()
 
     print(f"[database] Base de données initialisée dans {db_path}")
 
 
-def get_or_create_vendor(
-    cursor: sqlite3.Cursor,
-    vendor_name: str
-) -> int:
+def get_or_create_vendor(cursor: sqlite3.Cursor, vendor_name: str) -> int:
     cursor.execute(
         "SELECT vendor_id FROM vendors WHERE name = ?",
         (vendor_name,)
@@ -338,6 +343,42 @@ def upsert_certfr_advisory(
     for cve_id in cve_ids:
         cursor.execute(
             "INSERT OR IGNORE INTO certfr_advisory_cve "
+            "(reference, cve_id) VALUES (?, ?)",
+            (advisory["reference"], cve_id)
+        )
+
+
+def upsert_cisa_advisory(
+    cursor: sqlite3.Cursor,
+    advisory: dict,
+    cve_ids: list[str]
+) -> None:
+
+    cursor.execute("""
+        INSERT INTO cisa_advisories (
+            reference,
+            title,
+            summary,
+            link,
+            published_date
+        )
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(reference) DO UPDATE SET
+            title = excluded.title,
+            summary = excluded.summary,
+            link = excluded.link,
+            published_date = excluded.published_date
+    """, (
+        advisory["reference"],
+        advisory.get("title"),
+        advisory.get("summary"),
+        advisory.get("link"),
+        advisory.get("published_date"),
+    ))
+
+    for cve_id in cve_ids:
+        cursor.execute(
+            "INSERT OR IGNORE INTO cisa_advisory_cve "
             "(reference, cve_id) VALUES (?, ?)",
             (advisory["reference"], cve_id)
         )
