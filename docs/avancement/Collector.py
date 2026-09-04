@@ -52,7 +52,7 @@ def collect_and_save(days_back: int = 7 , output_path: str ="data/raw_cves.json"
     import json 
     import os
 
-    print(f"[collector] Recuperation des CVE des {days_back} derniers jours.")
+    print(f"[collector] Recuperation des CVE des {days_back} derniers jours -- Source NVD.")
     cves = get_recent_cves(days_back=days_back)
 
 
